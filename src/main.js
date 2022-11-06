@@ -1,9 +1,17 @@
-import { notify } from './modules/utils.js'
-import merge from 'just-merge'
+import quickComp from './modules/quickComp.js';
+import { addSolid } from './modules/quickLayerAdd.js';
+import { compInfoObj, solidInfoObj, placeHolderInfoObj} from './modules/infoObj.js';
+import { setProxyWithPlaceholder } from './modules/setLayer.js';
+import { compactDateNow, makeRandomID } from './modules/songzUtils.js';
 
-const obj = { a: 3, b: 5 }
-const merged = merge(obj, { a: 4, c: 8 })
-notify(`My merged object in JSON:\n${JSON.stringify(merged, '', 2)}`)
+placeHolderInfoObj.name += `${placeHolderInfoObj.width}x${placeHolderInfoObj.height}x${placeHolderInfoObj.frameRate}fps`;
+compInfoObj.name += `_${compactDateNow()}_${makeRandomID(4)}`;
 
-const greetings = ['hey', IM_IN_ENV]
-greetings.forEach(notify)
+app.beginUndoGroup(`${PRODUCT_DISPLAY_NAME}`);
+
+let comp = quickComp(compInfoObj);
+let solid = addSolid(comp, solidInfoObj);
+setProxyWithPlaceholder(solid.source, placeHolderInfoObj);
+
+comp.openInViewer();
+app.endUndoGroup();
